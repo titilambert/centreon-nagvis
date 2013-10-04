@@ -1,0 +1,12 @@
+--- share/frontend/nagvis-js/index.php.orig	2013-10-03 16:53:15.524525274 -0400
++++ share/frontend/nagvis-js/index.php	2013-10-03 10:39:45.279406849 -0400
+@@ -52,6 +52,9 @@
+         'Overview',
+         'Rotation',
+         'LogonDialog',
++	# SFL
++        'LogonCentreon',
++	# ENDSFL
+     );
+     
+     require('../../server/core/functions/index.php');
