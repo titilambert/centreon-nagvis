@@ -5,7 +5,9 @@ GRANT SELECT on centreon.centreonnagvis to 'nagvis'@'localhost';
 GRANT SELECT on centreon.acl_groups to 'nagvis'@'localhost';
 GRANT SELECT on centreon.session to 'nagvis'@'localhost';
 GRANT SELECT on centreon.acl_group_contacts_relations to 'nagvis'@'localhost';
+GRANT SELECT on centreon.acl_group_contactgroups_relations to 'nagvis'@'localhost';
 GRANT SELECT on centreon.contact to 'nagvis'@'localhost';
+GRANT SELECT on centreon.contactgroup_contact_relation to 'nagvis'@'localhost';
 GRANT SELECT on nagvis.roles to 'centreon'@'localhost';
 FLUSH PRIVILEGES;"
 
