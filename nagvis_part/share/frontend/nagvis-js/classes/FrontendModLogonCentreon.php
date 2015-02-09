@@ -139,35 +139,57 @@ class FrontendModLogonCentreon extends FrontendModule {
 								//$this->cnlog($query);
 								// take care that if there is more than 1 result, only the first one is used
 								$row = $db->query($query)->fetch(PDO::FETCH_ASSOC);
-								if ($row == null) {
-									$query = "SELECT c.contact_alias, c.contact_admin
-										  FROM ".$this->centreondb.".session s
-									 	  INNER JOIN ".$this->centreondb.".contact c ON s.user_id = c.contact_id
-										  WHERE s.id = ".$this->SESS->get("centreonnagvis")." AND
-										  c.contact_admin = '1' AND
-										  ip_address = '".$_SERVER["REMOTE_ADDR"]."'
-									          ";
+                                                                if ($row == null) {
+                                                                        //try with contactgroups
+									$query = "
+										SELECT 
+											u.userId,u.name,u.password, c.contact_alias, c.contact_admin
+										FROM 
+											".$this->centreondb.".session s
+											INNER JOIN ".$this->centreondb.".contact c ON s.user_id = c.contact_id
+											INNER JOIN ".$this->centreondb.".contactgroup_contact_relation cgcr ON c.contact_id = cgcr.contact_contact_id
+											INNER JOIN ".$this->centreondb.".acl_group_contactgroups_relations agcgr ON cgcr.contactgroup_cg_id = agcgr.cg_cg_id
+											INNER JOIN ".$this->centreondb.".acl_groups g ON agcgr.acl_group_id = g.acl_group_id
+											INNER JOIN ".$this->centreondb.".centreonnagvis cn ON g.acl_group_id = cn.acl_group_id
+											INNER JOIN nagvis.users2roles u2r ON cn.roleId = u2r.roleId
+											INNER JOIN nagvis.users u ON u2r.userId = u.userId
+										WHERE 
+											s.id=".$this->SESS->get("centreonnagvis")." AND
+											ip_address = '".$_SERVER["REMOTE_ADDR"]."'									
+									";
+									//$this->cnlog($query);
+									// take care that if there is more than 1 result, only the first one is used
 									$row = $db->query($query)->fetch(PDO::FETCH_ASSOC);
-									if ($row != null) {
-										$query = "
-										SELECT u.userId, u.name, u.password, perms.permid
-                	                                                        FROM 
-											nagvis.users u
-											INNER JOIN nagvis.users2roles u2r ON u.userId = u2r.roleId 
-											INNER JOIN nagvis.roles roles ON roles.roleId = u2r.roleId 
-											INNER JOIN nagvis.roles2perms r2p ON r2p.roleId = roles.roleId 
-											INNER JOIN nagvis.perms perms ON r2p.permId = perms.permId 
-										WHERE
-											perms.permid = 1;
-									
-                                	                                	";
+									if ($row == null) {
+										$query = "SELECT c.contact_alias, c.contact_admin
+											  FROM ".$this->centreondb.".session s
+										 	  INNER JOIN ".$this->centreondb.".contact c ON s.user_id = c.contact_id
+											  WHERE s.id = ".$this->SESS->get("centreonnagvis")." AND
+											  c.contact_admin = '1' AND
+											  ip_address = '".$_SERVER["REMOTE_ADDR"]."'
+										          ";
 										$row = $db->query($query)->fetch(PDO::FETCH_ASSOC);
-										if ($row == null) {
+										if ($row != null) {
+											$query = "
+											SELECT u.userId, u.name, u.password, perms.permid
+	                	                                                        FROM 
+												nagvis.users u
+												INNER JOIN nagvis.users2roles u2r ON u.userId = u2r.roleId 
+												INNER JOIN nagvis.roles roles ON roles.roleId = u2r.roleId 
+												INNER JOIN nagvis.roles2perms r2p ON r2p.roleId = roles.roleId 
+												INNER JOIN nagvis.perms perms ON r2p.permId = perms.permId 
+											WHERE
+												perms.permid = 1;
+										
+	                                	                                	";
+											$row = $db->query($query)->fetch(PDO::FETCH_ASSOC);
+											if ($row == null) {
+												return $this->go2login();
+											}
+										}
+										else {
 											return $this->go2login();
 										}
-									}
-									else {
-										return $this->go2login();
 									}
 								}
 								$AUTH->setTrustUsername(true);

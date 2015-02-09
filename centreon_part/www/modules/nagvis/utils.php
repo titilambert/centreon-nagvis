@@ -109,7 +109,7 @@ function updateCentreonNagvisMapping($data,$myCentreonDb){
 		$queryCheckExist="SELECT COUNT(*) AS `exist` FROM `centreonnagvis` WHERE `acl_group_id` = '".$row["acl_group_id"]."' and `roleId` = '".$row["roleId"]."'";
 		$resultExist =& $myCentreonDb->query($queryCheckExist);
 		$rowExist =& $resultExist->fetchRow();
-		if(isset($rowExist) && $rowExist[`exist`] == 0){
+		if(isset($rowExist) && $rowExist['exist'] == 0){
 			// create entry
 			$queryInsert = "INSERT INTO `centreonnagvis` (`acl_group_id`,`roleId`) VALUES ('".$row["acl_group_id"]."','".$row["roleId"]."')";
 			$myCentreonDb->query($queryInsert);
@@ -122,7 +122,7 @@ function updateCentreonNagvisConfig($myCentreonDb,$key,$value){
 	$queryCheckExist="SELECT COUNT(*) AS `exist` FROM `options` WHERE `key` = '".$key."'";
 	$resultExist =& $myCentreonDb->query($queryCheckExist);
 	$row =& $resultExist->fetchRow();
-	if(isset($row) && $row[`exist`] == 0){
+	if(isset($row) && $row['exist'] == 0){
 		// create entry
 		$queryUpdate = "INSERT INTO `options` (`key`,`value`) VALUES ('".$key."','".$value."')";
 	}else{
