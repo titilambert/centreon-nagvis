@@ -148,7 +148,7 @@ class FrontendModLogonCentreon extends FrontendModule {
 											".$this->centreondb.".session s
 											INNER JOIN ".$this->centreondb.".contact c ON s.user_id = c.contact_id
 											INNER JOIN ".$this->centreondb.".contactgroup_contact_relation cgcr ON c.contact_id = cgcr.contact_contact_id
-											INNER JOIN ".$this->centreondb.".acl_group_contactgroups_relations agcgr ON cgcr.contact_group_cg_id = agcgr.cg_cg_id
+											INNER JOIN ".$this->centreondb.".acl_group_contactgroups_relations agcgr ON cgcr.contactgroup_cg_id = agcgr.cg_cg_id
 											INNER JOIN ".$this->centreondb.".acl_groups g ON agcgr.acl_group_id = g.acl_group_id
 											INNER JOIN ".$this->centreondb.".centreonnagvis cn ON g.acl_group_id = cn.acl_group_id
 											INNER JOIN nagvis.users2roles u2r ON cn.roleId = u2r.roleId
